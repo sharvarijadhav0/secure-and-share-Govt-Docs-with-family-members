@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #000; /* Black background */
+            color: #fff; /* White text */
+            line-height: 1.6;
+        }
+
+        header {
+            background: #1e1e1e; /* Dark gray */
+            color: #0099cc; /* Light blue */
+            padding: 15px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+        }
+
+        nav a {
+            color: #0099cc; /* Light blue */
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        nav a:hover {
+            background: rgba(0, 153, 204, 0.2); /* Light blue hover */
+            color: #fff; /* White text on hover */
+        }
+
+        main {
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 30px auto;
+            background: #222; /* Dark gray */
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            color: #0099cc; /* Light blue */
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            font-weight: 400;
+            margin-bottom: 20px;
+            color: #ccc; /* Light gray */
+        }
+
+        section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-left: 5px solid #0099cc; /* Light blue */
+            background: #333; /* Darker gray */
+            border-radius: 5px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #0099cc; /* Light blue */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #007bb5; /* Darker blue */
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #1e1e1e; /* Dark gray */
+            color: #0099cc; /* Light blue */
+            margin-top: 30px;
+            position: relative;
+        }
+
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div>
+                <a href="#portal" class="portal">Government Portal</a>
+            </div>
+            <ul>
+                <li><a href="otp.html">Register</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a onclick="logout()">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="register">
+            <h2>Register</h2>
+            <h3>Store Your Documents in a Digital Format!</h3>
+            <p>Welcome to our registration page! Please fill out the form below to create your account.</p>
+            <a href="otp.html" class="btn">Register</a>
+        </section>
+
+        <section id="login">
+            <h2>Login</h2>
+            <h3>Access Your Documents Easily</h3>
+            <p>Welcome back! Please enter your credentials to log in to your account.</p>
+            <a href="login.html" class="btn">Login</a>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Government Portal. All rights reserved.</p>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
+    
+    <script>
+       // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBGnG1zEiVpnUaC55CuwaAUQPlHSFxx6l4",
+  authDomain: "governmentportal-a7ea9.firebaseapp.com",
+  projectId: "governmentportal-a7ea9",
+  storageBucket: "governmentportal-a7ea9.appspot.com",
+  messagingSenderId: "628596351774",
+  appId: "1:628596351774:web:151ae4434215dbcd689f0f",
+  measurementId: "G-HTYFGJ932S"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+    </script>
+    <script src="auth.js"></script>
+</body>
+</html>

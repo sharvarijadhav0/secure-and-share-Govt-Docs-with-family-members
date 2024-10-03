@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Submission</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #2c3e50; /* Dark background */
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #ecf0f1; /* Light text color */
+        }
+
+        h2 {
+            text-align: center;
+            color: #1abc9c; /* Teal */
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #34495e; /* Darker card background */
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: 600;
+            color: #ecf0f1; /* Light text for labels */
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        input[type="number"],
+        select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: #ecf0f1; /* Light input background */
+            color: #2c3e50; /* Darker text for input */
+        }
+
+        .submit {
+            background-color: #1abc9c; /* Teal button */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .submit:hover {
+            background-color: #16a085; /* Darker teal on hover */
+        }
+
+        #profile-details {
+            background-color: #34495e; /* Card for profile details */
+            text-align: left;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.3);
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 15px;
+                padding: 15px;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            input[type="date"],
+            input[type="number"],
+            select {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>My Profile</h2>
+        <form id="profile-form" autocomplete="off">
+            <label for="firstname">First Name:</label>
+            <input type="text" placeholder="First Name" id="firstname" required>
+
+            <label for="lastname">Last Name:</label>
+            <input type="text" placeholder="Last Name" id="lastname" required>
+
+            <label for="aadharNumber">Aadhaar Number:</label>
+            <input type="text" id="aadharNumber" placeholder="Aadhaar Number" required pattern="\d{12}">
+
+            <label for="email">Email:</label>
+            <input type="email" placeholder="abc@gmail.com" id="email" required>
+
+            <label for="gender">Gender:</label>
+            <select id="gender" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="date">Date of Birth:</label>
+            <input type="date" id="date" required>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" required min="0">
+
+            <label for="country">Country:</label>
+            <input type="text" id="country" required>
+
+            <label for="state">State:</label>
+            <input type="text" placeholder="State" id="state" required>
+
+            <label for="city">City:</label>
+            <input type="text" placeholder="City" id="city" required>
+
+            <button type="submit" class="submit">Submit</button>
+            <div id="message"></div>
+        </form>
+
+        <div id="profile-details"></div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-storage-compat.js"></script>
+    
+    <script>
+       // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBGnG1zEiVpnUaC55CuwaAUQPlHSFxx6l4",
+  authDomain: "governmentportal-a7ea9.firebaseapp.com",
+  projectId: "governmentportal-a7ea9",
+  storageBucket: "governmentportal-a7ea9.appspot.com",
+  messagingSenderId: "628596351774",
+  appId: "1:628596351774:web:151ae4434215dbcd689f0f",
+  measurementId: "G-HTYFGJ932S"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+       
+        const form = document.getElementById('profile-form');
+        form.addEventListener('submit', submit);
+        
+        function submit(e) {
+            e.preventDefault();
+            const firstname1 = document.getElementById('firstname').value;
+            const lastname1 = document.getElementById('lastname').value;
+            const gender1 = document.getElementById('gender').value;
+            const date1 = document.getElementById('date').value;
+            const age1 = document.getElementById('age').value;
+            const country1 = document.getElementById('country').value;
+            const state1 = document.getElementById('state').value;
+            const city1 = document.getElementById('city').value;
+            const aadharNumber1 = document.getElementById('aadharNumber').value;
+            const email1 = document.getElementById('email').value;
+
+            db.collection('users').doc(aadharNumber1).set({
+                Firstname: firstname1,
+                Lastname: lastname1,
+                Email: email1,
+                Gender: gender1,
+                Date: date1,
+                Age: age1,
+                Country: country1,
+                State: state1,
+                City: city1,
+            })
+            .then(() => {
+                document.getElementById('message').innerText = "Profile information submitted successfully!";
+                document.getElementById('message').style.color = "green";
+                displayProfile(aadharNumber1);
+            })
+            .catch((error) => {
+                console.error("Error storing profile information: ", error);
+                document.getElementById('message').innerText = "Error submitting profile information.";
+                document.getElementById('message').style.color = "red";
+            });
+        }
+
+        function displayProfile(aadharNumber1) {
+            db.collection('users').doc(aadharNumber1).get().then((doc) => {
+                if (doc.exists) {
+                    const profile = doc.data();
+                    document.getElementById('profile-details').innerHTML = `
+                        <h2>Profile Details</h2>
+                        <p><strong>First Name:</strong> ${profile.Firstname}</p>
+                        <p><strong>Last Name:</strong> ${profile.Lastname}</p>
+                        <p><strong>Aadhaar:</strong> ${aadharNumber1}</p>
+                        <p><strong>Email:</strong> ${profile.Email}</p>
+                        <p><strong>Gender:</strong> ${profile.Gender}</p>
+                        <p><strong>DOB:</strong> ${profile.Date}</p>
+                        <p><strong>Age:</strong> ${profile.Age}</p>
+                        <p><strong>Country:</strong> ${profile.Country}</p>
+                        <p><strong>State:</strong> ${profile.State}</p>
+                        <p><strong>City:</strong> ${profile.City}</p>
+                    `;
+                } else {
+                    document.getElementById('profile-details').innerHTML = 'No profile found';
+                }
+            }).catch((error) => {
+                console.error('Error getting profile: ', error);
+            });
+        }
+    </script>
+</body>
+</html>

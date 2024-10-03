@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #2c3e50; /* Dark background */
+            font-family: 'Roboto', sans-serif;
+            color: #ecf0f1; /* Light text color */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .register {
+            background-color: #34495e; /* Card background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #1abc9c; /* Teal */
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #ecf0f1; /* Light input background */
+            color: #2c3e50; /* Darker text for input */
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: #1abc9c; /* Teal button */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #16a085; /* Darker teal on hover */
+        }
+
+        #message {
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="register">
+        <h2>Register</h2>
+        <form autocomplete="off" onsubmit="signup(event)">
+            <label>Email:
+                <br>
+                <input type="text" placeholder="abc@gmail.com" id="email" required>
+            </label>
+            <br>
+            <label>Password:
+                <br>
+                <input type="password" placeholder="123#$abc" id="password" required>
+            </label>
+            <br>
+            <div id="message"></div>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
+
+    <script>
+        // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBGnG1zEiVpnUaC55CuwaAUQPlHSFxx6l4",
+  authDomain: "governmentportal-a7ea9.firebaseapp.com",
+  projectId: "governmentportal-a7ea9",
+  storageBucket: "governmentportal-a7ea9.appspot.com",
+  messagingSenderId: "628596351774",
+  appId: "1:628596351774:web:151ae4434215dbcd689f0f",
+  measurementId: "G-HTYFGJ932S"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+        function signup(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Signed in
+                    document.getElementById('message').innerText = "Registration successful!";
+                    document.getElementById('message').style.color = "green";
+                })
+                .catch((error) => {
+                    const errorMessage = error.message;
+                    document.getElementById('message').innerText = errorMessage;
+                    document.getElementById('message').style.color = "red";
+                });
+        }
+    </script>
+</body>
+</html>

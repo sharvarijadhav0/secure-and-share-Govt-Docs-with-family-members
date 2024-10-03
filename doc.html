@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload and Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+        .container {
+            max-width: 500px;
+            padding: 20px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        h2 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        .file-input {
+            margin: 15px 0;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            padding: 10px;
+            width: calc(100% - 22px);
+            background: transparent;
+            color: #fff;
+        }
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin-top: 10px;
+            font-weight: bold;
+            display: none; /* Initially hidden */
+        }
+        .error {
+            color: #ff4d4d; /* Bright red for errors */
+        }
+        .success {
+            color: #4caf50; /* Green for success messages */
+        }
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            background: transparent;
+            color: #fff;
+        }
+        a {
+            text-decoration: none;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Upload Files</h2>
+        <input type="file" class="file-input" multiple accept=".doc,.docx,.pdf">
+        <div class="uploadsuccess message"></div>
+
+        <h3>Delete File</h3>
+        <input type="text" id="fileName" placeholder="Enter file name to delete">
+        <button class="btn" onclick="deleteFile()">Delete File</button>
+        <div class="deletemsg message"></div>
+
+        <button class="btn"><a href="submit.html">Go to Profile</a></button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-storage-compat.js"></script>
+    
+    <script>
+        // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBGnG1zEiVpnUaC55CuwaAUQPlHSFxx6l4",
+  authDomain: "governmentportal-a7ea9.firebaseapp.com",
+  projectId: "governmentportal-a7ea9",
+  storageBucket: "governmentportal-a7ea9.appspot.com",
+  messagingSenderId: "628596351774",
+  appId: "1:628596351774:web:151ae4434215dbcd689f0f",
+  measurementId: "G-HTYFGJ932S"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+        const fileInput = document.querySelector(".file-input");
+        const uploadSuccess = document.querySelector(".uploadsuccess");
+        const deleteMsg = document.querySelector(".deletemsg");
+
+        fileInput.addEventListener('change', function (e) {
+            Array.from(e.target.files).forEach(docfile => {
+                const storageRef = storage.ref("files/" + docfile.name);
+                const task = storageRef.put(docfile);
+                
+                task.on('state_changed', 
+                    snapshot => {
+                        const percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        console.log("Upload is " + percentage + "% done");
+                    }, 
+                    error => {
+                        showMessage(uploadSuccess, "Error: " + error.message, "error");
+                    }, 
+                    () => {
+                        showMessage(uploadSuccess, "Upload successful!", "success");
+                    }
+                );
+            });
+        });
+
+        function deleteFile() {
+            const fileName = document.getElementById('fileName').value.trim();
+            if (!fileName) {
+                showMessage(deleteMsg, "Please enter a file name.", "error");
+                return;
+            }
+
+            const storageRef = storage.ref();
+            const fileRef = storageRef.child("files/" + fileName);
+
+            fileRef.delete()
+                .then(() => {
+                    showMessage(deleteMsg, "File deleted successfully.", "success");
+                })
+                .catch((error) => {
+                    showMessage(deleteMsg, "Error deleting file: " + error.message, "error");
+                });
+        }
+
+        function showMessage(element, message, type) {
+            element.innerHTML = message;
+            element.className = `message ${type}`;
+            element.style.display = "block"; // Show the message
+            setTimeout(() => {
+                element.style.display = "none"; // Hide after a delay
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

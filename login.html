@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #1c1c1c, #333);
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+        .login {
+            background: #2b2b2b;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            padding: 40px 30px;
+            width: 350px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .login:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+        h2 {
+            margin-bottom: 20px;
+            font-size: 26px;
+            text-align: center;
+            color: #0099cc;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #ccc;
+        }
+        input {
+            margin: 10px 0 20px;
+            padding: 12px;
+            border: 1px solid #444;
+            border-radius: 10px;
+            width: 100%;
+            background: #3c3c3c;
+            color: #fff;
+            font-size: 16px;
+            transition: border-color 0.3s, background 0.3s;
+        }
+        input:focus {
+            border-color: #0099cc;
+            outline: none;
+            background: #444;
+        }
+        button {
+            padding: 12px;
+            width: 100%;
+            background-color: #0099cc;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        button:hover {
+            background-color: #0099cc;
+            transform: translateY(-2px);
+        }
+        .error {
+            color: #e74c3c;
+            margin: 10px 0;
+            font-weight: bold;
+            text-align: center;
+        }
+        .register {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #ccc;
+            text-align: center;
+        }
+        .register a {
+            color: 0099cc;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .register a:hover {
+            color: #0099cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="login">
+        <h2>Login</h2>
+        <form id="login-form">
+            <label>Email:</label>
+            <input type="email" placeholder="abc@gmail.com" id="loginemail" required>
+            <label>Password:</label>
+            <input type="password" placeholder="••••••••" id="loginpassword" required>
+            <div id="mess" class="error"></div>
+            <button type="submit">Login</button>
+        </form>
+        <p class="register">Don't have an account? <a href="submit.html">Sign up</a></p>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
+
+    <script>
+       // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBGnG1zEiVpnUaC55CuwaAUQPlHSFxx6l4",
+  authDomain: "governmentportal-a7ea9.firebaseapp.com",
+  projectId: "governmentportal-a7ea9",
+  storageBucket: "governmentportal-a7ea9.appspot.com",
+  messagingSenderId: "628596351774",
+  appId: "1:628596351774:web:151ae4434215dbcd689f0f",
+  measurementId: "G-HTYFGJ932S"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+        // Add event listener to the form
+        document.getElementById('login-form').addEventListener('submit', signin);
+
+        function signin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginemail').value;
+            const password = document.getElementById('loginpassword').value;
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then((cred) => {
+                    console.log('User signed in:', cred.user);
+                    // Redirect or take action after successful sign-in
+                })
+                .catch((error) => {
+                    console.error('Error signing in:', error);
+                    document.getElementById('mess').innerText = error.message;
+                });
+        }
+    </script>
+</body>
+</html>

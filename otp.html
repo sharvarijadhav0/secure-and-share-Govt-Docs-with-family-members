@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to bottom right, #34495e, #2c3e50); /* Dark gradient background */
+            color: #ecf0f1; /* Light text color */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .form {
+            background: rgba(52, 58, 64, 0.9); /* Semi-transparent dark background */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            width: 300px; /* Fixed width */
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: #1abc9c; /* Teal */
+        }
+
+        label {
+            margin: 15px 0;
+            display: block;
+            color: #ecf0f1;
+        }
+
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 5px;
+            background: #ecf0f1; /* Light input background */
+            color: #34495e; /* Darker text for input */
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #3498db; /* Bright blue */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-weight: 600;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background: #2980b9; /* Darker blue */
+            transform: scale(1.05); /* Slightly enlarge on hover */
+        }
+
+        #recaptcha-container {
+            margin: 15px 0; /* Margin for reCAPTCHA */
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 400px) {
+            .form {
+                width: 90%; /* Responsive width */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form">
+        <h2>OTP Verification</h2>
+        <form>
+            <label><b>Phone number: (+91 XXXX)</b>
+                <input type="text" id="phonenum" required>
+            </label>
+
+            <div id="recaptcha-container"></div>
+            <button onclick="phoneAuth(event)">Send OTP</button>
+
+            <label><b>Enter OTP sent to your number:</b>
+                <input type="text" id="otp" required>
+            </label>
+
+            <button onclick="verifycode(event)">Verify OTP</button>
+        </form>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
+
+    <script>
+       // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBGnG1zEiVpnUaC55CuwaAUQPlHSFxx6l4",
+  authDomain: "governmentportal-a7ea9.firebaseapp.com",
+  projectId: "governmentportal-a7ea9",
+  storageBucket: "governmentportal-a7ea9.appspot.com",
+  messagingSenderId: "628596351774",
+  appId: "1:628596351774:web:151ae4434215dbcd689f0f",
+  measurementId: "G-HTYFGJ932S"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+        function render() {
+            window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+            recaptchaVerifier.render();
+        }
+
+        function phoneAuth(e) {
+            e.preventDefault();
+            const phoneNumber = document.getElementById('phonenum').value;
+            const appVerifier = window.recaptchaVerifier;
+
+            firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+                .then((confirmationResult) => {
+                    window.confirmationResult = confirmationResult;
+                    alert("OTP sent");
+                })
+                .catch((error) => {
+                    alert(error.message);
+                });
+        }
+
+        function verifycode(e) {
+            e.preventDefault();
+            const code = document.getElementById('otp').value;
+
+            window.confirmationResult.confirm(code).then(function() {
+                alert("OTP verified");
+                setTimeout(() => {
+                    window.location = 'register.html'; // Redirect after a delay
+                }, 1000);
+            }).catch(function() {
+                alert("OTP not correct");
+            });
+        }
+
+        render(); // Call render to initialize reCAPTCHA
+    </script>
+
+</body>
+</html>
